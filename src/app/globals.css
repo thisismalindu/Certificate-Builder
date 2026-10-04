@@ -180,6 +180,27 @@ select {
   border-color: #7a8cab;
   box-shadow: 0 0 0 3px #7a8cab28;
 }
+.control-label input:focus-visible,
+.control-label textarea:focus-visible,
+.control-label select:focus-visible,
+button:focus-visible,
+.preset-picker select:focus-visible {
+  outline: 2px solid #827047;
+  outline-offset: 2px;
+}
+.control-label input[aria-invalid="true"],
+.control-label textarea[aria-invalid="true"] {
+  border-color: #b43324;
+  box-shadow: 0 0 0 2px #b4332424;
+}
+.field-error {
+  display: block;
+  margin-top: 5px;
+  color: #963025;
+  font-size: 11px;
+  line-height: 1.35;
+  letter-spacing: 0;
+}
 .control-label textarea {
   resize: vertical;
 }
@@ -227,6 +248,13 @@ select {
   height: 700px;
   transform-origin: top center;
   flex: none;
+}
+.preview-scale.invitation-scale {
+  width: 700px;
+  height: 993.134px;
+}
+.preview-shell.portrait {
+  min-height: 600px;
 }
 .certificate {
   position: relative;
@@ -412,6 +440,226 @@ select {
   right: 0;
   font-size: 10px;
 }
+.preset-picker {
+  display: grid;
+  gap: 4px;
+  min-width: 190px;
+  color: #716a60;
+  font-size: 11px;
+}
+.preset-picker select {
+  min-height: 37px;
+  border: 1px solid #cfc7ba;
+  border-radius: 6px;
+  background: white;
+  color: #2e2c29;
+  padding: 6px 30px 6px 10px;
+}
+.guest-editor {
+  margin: 14px 0;
+  padding-top: 12px;
+  border-top: 1px solid #ded7ca;
+}
+.guest-editor-heading,
+.guest-editor-title h3 {
+  margin: 0;
+  color: #66513a;
+  font-size: 13px;
+  font-weight: 600;
+}
+.guest-editor-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.text-action {
+  padding: 3px 0;
+  border: 0;
+  background: transparent;
+  color: #775d40;
+  font-size: 12px;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+.control-hint {
+  margin: 7px 0 0;
+  color: #716a60;
+  font-size: 12px;
+}
+.invitation {
+  --invitation-unit: calc(700px / 1748);
+  position: relative;
+  width: 700px;
+  height: 993.134px;
+  overflow: hidden;
+  background: #fff;
+  color: #292929;
+  font-family: var(--font-invitation-body), Inter, Arial, sans-serif;
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 1.13;
+  text-align: center;
+}
+.invitation-art {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  display: block;
+  width: 700px;
+  height: 993.134px;
+  object-fit: fill;
+  pointer-events: none;
+}
+.invitation > :not(.invitation-art) {
+  position: absolute;
+  z-index: 1;
+  left: 40px;
+  right: 40px;
+}
+.invitation-school {
+  top: 128px;
+  height: 18px;
+  overflow: hidden;
+  font-size: 14px;
+  line-height: 18px;
+}
+.invitation-location {
+  top: 145px;
+  height: 18px;
+  overflow: hidden;
+  font-size: 14px;
+  line-height: 18px;
+}
+.invitation-intro {
+  top: 177px;
+  height: 18px;
+  overflow: hidden;
+  font-size: 14px;
+  line-height: 18px;
+}
+.invitation-chief {
+  top: 204px;
+  display: grid;
+  gap: 0;
+  min-height: 38px;
+  padding-inline: 6px;
+  font-size: 15px;
+  line-height: 18px;
+  overflow: hidden;
+  overflow-wrap: anywhere;
+}
+.invitation-chief strong,
+.invitation-chief span {
+  display: block;
+  height: 18px;
+  overflow: hidden;
+  overflow-wrap: anywhere;
+}
+.invitation-chief strong,
+.invitation-guest strong {
+  font-weight: 700;
+}
+.invitation-chief-label {
+  top: 253px;
+  height: 20px;
+  overflow: hidden;
+  font-size: 16px;
+  line-height: 19px;
+}
+.invitation-chief-label em {
+  font-family: var(--font-libre-baskerville), Georgia, serif;
+  font-size: 17px;
+}
+.invitation-separator {
+  top: 286px;
+  height: 18px;
+  overflow: hidden;
+  font-size: 14px;
+  line-height: 18px;
+}
+.invitation-guests {
+  top: 312px;
+  height: 235px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.invitation-guest {
+  flex: 0 0 43px;
+  min-width: 0;
+  height: 43px;
+  padding-inline: 4px;
+  overflow: hidden;
+  overflow-wrap: anywhere;
+  font-size: 15px;
+  line-height: 18px;
+}
+.invitation-guest strong,
+.invitation-guest span {
+  display: block;
+  height: 18px;
+  overflow: hidden;
+  overflow-wrap: anywhere;
+}
+.invitation-other-guests {
+  top: 563px;
+  height: 39px;
+  white-space: pre-line;
+  font-size: 15px;
+  line-height: 19px;
+  overflow: hidden;
+  overflow-wrap: anywhere;
+}
+.invitation-event-intro {
+  top: 612px;
+  height: 19px;
+  overflow: hidden;
+  font-size: 14px;
+  line-height: 19px;
+}
+.invitation-event-title {
+  top: 649px;
+  height: 85px;
+  color: #d99a27;
+  font-family: var(--font-invitation-display), Georgia, serif;
+  font-size: 46px;
+  font-weight: 400;
+  line-height: 0.9;
+  white-space: pre-line;
+  overflow: hidden;
+  overflow-wrap: anywhere;
+}
+.invitation-ceremony {
+  top: 744px;
+  height: 21px;
+  overflow: hidden;
+  font-size: 13px;
+  line-height: 17px;
+}
+.invitation-date-time {
+  top: 800px;
+  height: 18px;
+  overflow: hidden;
+  font-size: 14px;
+  line-height: 18px;
+}
+.invitation-venue {
+  top: 819px;
+  height: 18px;
+  overflow: hidden;
+  font-size: 14px;
+  line-height: 18px;
+}
+.invitation-host {
+  top: 960px;
+  height: 16px;
+  overflow: hidden;
+  color: #333;
+  font-size: 12px;
+  line-height: 16px;
+}
 @media (max-width: 900px) {
   .app-shell {
     padding: 16px;
@@ -440,5 +688,11 @@ select {
   }
   .header-actions {
     width: 100%;
+  }
+  .preset-picker {
+    width: min(100%, 240px);
+  }
+  .preview-shell.portrait {
+    min-height: 0;
   }
 }

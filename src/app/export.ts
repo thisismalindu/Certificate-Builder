@@ -1,21 +1,43 @@
-import { toCanvas } from "html-to-image";
-import { jsPDF } from "jspdf";
 export const filename = (recipient: string) => `certificate${recipient.trim() ? `-${recipient.trim().replace(/[^a-z0-9]+/gi, "-").replace(/^-|-$/g, "").toLowerCase()}` : ""}`;
-export async function capture(node: HTMLElement) {
+
+export async function capture(node: HTMLElement, dimensions: { width: number; height: number }): Promise<Blob> {
   await document.fonts.ready;
-  const img = node.querySelector("img");
-  if (img && !img.complete) await new Promise((r) => { img.onload = r; img.onerror = r; });
-  const scale = 3508 / 990;
+  const images = Array.from(node.querySelectorAll("img"));
+  await Promise.all(images.map((image) => image.decode().catch(() => undefined)));
+  const { toCanvas } = await import("html-to-image");
   const canvas = await toCanvas(node, {
     backgroundColor: "#fff",
-    width: 990,
-    height: 700,
-    canvasWidth: 990,
-    canvasHeight: 700,
-    pixelRatio: scale,
+    width: node.offsetWidth,
+    height: node.offsetHeight,
+    canvasWidth: dimensions.width,
+    canvasHeight: dimensions.height,
+    pixelRatio: 1,
     cacheBust: true,
   });
-  return canvas.toDataURL("image/png");
+  return new Promise((resolve, reject) => {
+    canvas.toBlob((blob) => blob ? resolve(blob) : reject(new Error("PNG encoding failed")), "image/png");
+  });
 }
-export function download(data: string | Blob, name: string) { const url = typeof data === "string" ? data : URL.createObjectURL(data); const a = document.createElement("a"); a.href = url; a.download = name; a.click(); if (typeof data !== "string") setTimeout(() => URL.revokeObjectURL(url), 1000); }
-export async function downloadPdf(image: string, name: string) { const source = new Image(); await new Promise<void>((resolve, reject) => { source.onload = () => resolve(); source.onerror = reject; source.src = image; }); const canvas = document.createElement("canvas"); canvas.width = source.width; canvas.height = source.height; const context = canvas.getContext("2d"); if (!context) throw new Error("Canvas is unavailable"); context.fillStyle = "#fff"; context.fillRect(0, 0, canvas.width, canvas.height); context.drawImage(source, 0, 0); const pdf = new jsPDF({ orientation: "landscape", unit: "mm", format: "a4" }); pdf.addImage(canvas.toDataURL("image/jpeg", 0.92), "JPEG", 0, 0, 297, 210, undefined, "FAST"); pdf.save(name); }
+
+export function download(data: string | Blob, name: string) {
+  const url = typeof data === "string" ? data : URL.createObjectURL(data);
+  const anchor = document.createElement("a");
+  anchor.href = url;
+  anchor.download = name;
+  anchor.click();
+  if (typeof data !== "string") window.setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
+export async function downloadPdf(image: Blob, name: string, orientation: "portrait" | "landscape", format: [number, number]) {
+  const [{ jsPDF }, url] = await Promise.all([import("jspdf"), Promise.resolve(URL.createObjectURL(image))]);
+  try {
+    const raster = new Image();
+    raster.src = url;
+    await raster.decode();
+    const pdf = new jsPDF({ orientation, unit: "mm", format });
+    pdf.addImage(raster, "PNG", 0, 0, format[0], format[1], undefined, "FAST");
+    pdf.save(name);
+  } finally {
+    URL.revokeObjectURL(url);
+  }
+}
